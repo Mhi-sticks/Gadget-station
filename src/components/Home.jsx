@@ -48,14 +48,6 @@ const home = () => {
           </div>
           <div className="carousel-item">
             <img
-              src="/assets/images/home/home7.jpg"
-              className="d-block w-100"
-              alt="iphone"
-              height="650vh"
-            />
-          </div>
-          <div className="carousel-item">
-            <img
               src="/assets/images/home/home8.jpg"
               className="d-block w-100"
               alt="iphone"
