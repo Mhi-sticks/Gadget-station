@@ -4,6 +4,8 @@ import { useState } from "react";
 import DATA from "../Data";
 import { useDispatch } from "react-redux";
 import { addItem, delItem } from "../redux/actions/index";
+// import axios from "axios";
+
 
 const ProductDetail = () => {
   const [cartBtn, setCartBtn] = useState("Add to Cart");
@@ -11,7 +13,17 @@ const ProductDetail = () => {
   const proid = useParams();
   const proDetail = DATA.filter((x) => x.id == proid.id);
   const product = proDetail[0];
+  //still dont know wat to do
+  // const [products, setProducts] = useState([]);
 
+  // useEffect(() => {
+  //   const fetchproducts = async() => {
+  //     const {data} = await axios.get("/api/products")
+  //     setProducts(data)
+  //   }
+  //   fetchproducts()
+  // }, []);
+  //end point, still need to come back
   //   need to store useDispatch in a variable
   const dispatch = useDispatch();
 
@@ -33,7 +45,7 @@ const ProductDetail = () => {
             <img
               src={product.img}
               alt={product.title}
-              height="400px"
+              height="350px"
               width="400px"
             />
           </div>

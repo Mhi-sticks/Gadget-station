@@ -1,6 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Row } from "react-bootstrap";
+import Message from "../Message";
+import Loader from "../Loader";
+import "../../App.css";
 
-const Login = () => {
+import { login } from "../../redux/actions/userActions";
+
+const Login = ({ history }) => {
+  window.scrollTo(0, 0);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const redirect = location.search ? location.search.split("=")[1] : "/";
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { error, loading, userInfo } = userLogin;
+
+  useEffect(() => {
+    if (userInfo) {
+      history.push(redirect);
+    }
+  }, [userInfo, history, redirect]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  };
+  // ".modal".modal("hide");
+  // "body".removeClass("modal-open");
+  // ".modal-backdrop".remove();
   return (
     <>
       {/* <!-- Button trigger modal --> */}
@@ -19,7 +50,8 @@ const Login = () => {
         id="loginModal"
         tabIndex="-1"
         aria-labelledby="loginModalLabel"
-        aria-hidden="true"
+        data-backdrop="false"
+        aria-hidden="false"
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -32,48 +64,55 @@ const Login = () => {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                data-backdrop="false"
               ></button>
             </div>
             <div className="modal-body">
-              <button className="btn btn-primary w-100 mb-4">
+              {/* <button className="btn btn-primary w-100 mb-4">
                 <span className="fa fa-google me-2"></span>Sign in With Google
               </button>
               <button className="btn btn-primary w-100 mb-4">
                 <span className="fa fa-facebook me-2"></span>Sign in With
                 Facebook
-              </button>
-              <form>
+              </button> */}
+              {error && <Message variant="danger">{error}</Message>}
+              {loading && <Loader />}
+              <form onSubmit={submitHandler}>
                 <div className="mb-3">
-                  <label htmlFor="exampleInputEmail1" className="form-label">
+                  <label htmlFor="exampleInputEmail4" className="form-label">
                     Email address
                   </label>
                   <input
                     type="email"
                     className="form-control"
-                    id="exampleInputEmail1"
+                    name="exampleInputEmail4"
                     aria-describedby="emailHelp"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <div id="emailHelp" className="form-text">
                     We'll never share your email with anyone else.
                   </div>
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="exampleInputPassword1" className="form-label">
+                  <label htmlFor="exampleInputPassword4" className="form-label">
                     Password
                   </label>
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    name="exampleInputPassword4"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="mb-3 form-check">
                   <input
                     type="checkbox"
                     className="form-check-input"
-                    id="exampleCheck1"
+                    name="exampleCheck4"
                   />
-                  <label className="form-check-label" htmlFor="exampleCheck1">
+                  <label className="form-check-label" htmlFor="exampleCheck4">
                     Check me out
                   </label>
                 </div>
@@ -83,6 +122,8 @@ const Login = () => {
                 >
                   Submit
                 </button>
+
+                <Row className="py-2"></Row>
               </form>
             </div>
           </div>

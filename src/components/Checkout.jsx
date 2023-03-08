@@ -1,9 +1,35 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import {
+  savePaymentMethod,
+  saveShippingAddress,
+} from "../redux/actions/CartAction";
 
-const Checkout = () => {
+const Checkout = (history) => {
+  window.scrollTo(0, 0);
   const state = useSelector((state) => state.addItem);
 
+  const cart = useSelector((state) => state.cart);
+  const { shippingAddress } = cart;
+
+  const [address, setAddress] = useState(shippingAddress.address);
+  const [city, setCity] = useState(shippingAddress.city);
+  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
+  const [country, setCountry] = useState(shippingAddress.country);
+  const [paymentMethod, setPaymentMethod] = useState("paypal");
+  const [deliveryMethod, setDeliveryMethod] = useState("Send Solution");
+
+  const dispatch = useDispatch();
+
+  // const handleClose = (item) => {
+  //   dispatch(delItem(item));
+  // };
+  if (!shippingAddress) {
+    history.push("/checkout");
+  }
   var total = 0;
   const itemList = (item) => {
     total = total + item.price;
@@ -20,6 +46,12 @@ const Checkout = () => {
         </li>
       </div>
     );
+  };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(saveShippingAddress({ address, country, postalCode, city }));
+    dispatch(savePaymentMethod(paymentMethod));
+    history.push("/placeorder");
   };
   return (
     <>
@@ -41,7 +73,7 @@ const Checkout = () => {
               </li>
             </ul>
 
-            <form className="card p-2">
+            <form className="card p-2" onSubmit={submitHandler}>
               <div className="input-group">
                 <input
                   type="text"
@@ -56,7 +88,11 @@ const Checkout = () => {
           </div>
           <div className="col-md-7 col-lg-8">
             <h4 className="mb-3">Billing address</h4>
-            <form className="needs-validation" noValidate="">
+            <form
+              className="needs-validation"
+              noValidate=""
+              onSubmit={submitHandler}
+            >
               <div className="row g-3">
                 <div className="col-sm-6">
                   <label htmlFor="firstName" className="form-label">
@@ -66,8 +102,8 @@ const Checkout = () => {
                     type="text"
                     className="form-control"
                     id="firstName"
-                    placeholder=""
-                    required=""
+                    placeholder="first name"
+                    required
                   />
                   <div className="invalid-feedback">
                     Valid first name is required.
@@ -83,7 +119,7 @@ const Checkout = () => {
                     className="form-control"
                     id="lastName"
                     placeholder=""
-                    required=""
+                    required
                   />
                   <div className="invalid-feedback">
                     Valid last name is required.
@@ -101,7 +137,7 @@ const Checkout = () => {
                       className="form-control"
                       id="username"
                       placeholder="Username"
-                      required=""
+                      required
                     />
                     <div className="invalid-feedback">
                       Your username is required.
@@ -133,32 +169,29 @@ const Checkout = () => {
                     className="form-control"
                     id="address"
                     placeholder="1234 Main St"
-                    required=""
+                    required
+                    value={address || ""}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                   <div className="invalid-feedback">
                     Please enter your shipping address.
                   </div>
                 </div>
 
-                <div className="col-12">
-                  <label htmlFor="address2" className="form-label">
-                    Address 2 <span className="text-muted">(Optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="address2"
-                    placeholder="Apartment or suite"
-                  />
-                </div>
-
                 <div className="col-md-5">
                   <label htmlFor="country" className="form-label">
                     Country
                   </label>
-                  <select className="form-select" id="country" required="">
+                  <select
+                    className="form-select"
+                    id="country"
+                   
+                    value={country || ""}
+                    required
+                    onChange={(e) => setCountry(e.target.value)}
+                  >
                     <option>Choose...</option>
-                    <option>United States</option>
+                    <option>Nigeria</option>
                   </select>
                   <div className="invalid-feedback">
                     Please select a valid country.
@@ -169,9 +202,16 @@ const Checkout = () => {
                   <label htmlFor="state" className="form-label">
                     State
                   </label>
-                  <select className="form-select" id="state" required="">
+                  <select
+                    className="form-select"
+                    id="state"
+                    
+                    value={city || ""}
+                    required
+                    onChange={(e) => setCity(e.target.value)}
+                  >
                     <option>Choose...</option>
-                    <option>California</option>
+                    <option>Lagos</option>
                   </select>
                   <div className="invalid-feedback">
                     Please provide a valid state.
@@ -186,8 +226,10 @@ const Checkout = () => {
                     type="text"
                     className="form-control"
                     id="zip"
-                    placeholder=""
-                    required=""
+                    
+                    value={postalCode || ""}
+                    required
+                    onChange={(e) => setPostalCode(e.target.value)}
                   />
                   <div className="invalid-feedback">Zip code required.</div>
                 </div>
@@ -224,42 +266,20 @@ const Checkout = () => {
               <div className="my-3">
                 <div className="form-check">
                   <input
-                    id="credit"
-                    name="paymentMethod"
-                    type="radio"
-                    className="form-check-input"
-                    required=""
-                  />
-                  <label className="form-check-label" htmlFor="credit">
-                    Credit card
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    id="debit"
-                    name="paymentMethod"
-                    type="radio"
-                    className="form-check-input"
-                    required=""
-                  />
-                  <label className="form-check-label" htmlFor="debit">
-                    Debit card
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
                     id="paypal"
                     name="paymentMethod"
                     type="radio"
                     className="form-check-input"
-                    required=""
+                    value={paymentMethod}
+                    required
+                    onChange={(e) => setPaymentMethod(e.target.value)}
                   />
                   <label className="form-check-label" htmlFor="paypal">
                     PayPal
                   </label>
                 </div>
               </div>
-
+          
               <div className="row gy-3">
                 <div className="col-md-6">
                   <label htmlFor="cc-name" className="form-label">
@@ -270,7 +290,7 @@ const Checkout = () => {
                     className="form-control"
                     id="cc-name"
                     placeholder=""
-                    required=""
+                    required
                   />
                   <small className="text-muted">
                     Full name as displayed on card
@@ -289,7 +309,7 @@ const Checkout = () => {
                     className="form-control"
                     id="cc-number"
                     placeholder=""
-                    required=""
+                    required
                   />
                   <div className="invalid-feedback">
                     Credit card number is required
@@ -305,7 +325,7 @@ const Checkout = () => {
                     className="form-control"
                     id="cc-expiration"
                     placeholder=""
-                    required=""
+                    required
                   />
                   <div className="invalid-feedback">
                     Expiration date required
@@ -321,7 +341,7 @@ const Checkout = () => {
                     className="form-control"
                     id="cc-cvv"
                     placeholder=""
-                    required=""
+                    required
                   />
                   <div className="invalid-feedback">Security code required</div>
                 </div>
@@ -329,8 +349,43 @@ const Checkout = () => {
 
               <hr className="my-4" />
 
+              <h4 className="mb-3">Delivery</h4>
+
+              <div className="my-3">
+                <div className="form-check">
+                <input
+                        type='radio'
+                        label='DHL'
+                        id='dhl'
+                        name='deliveryMethod'
+                        value={deliveryMethod}
+                        required
+                        checked onChange={(e) => setDeliveryMethod(e.target.value)} />
+                        <label className="form-check-label" htmlFor="paypal">
+                    DHL
+                  </label>
+                    </div>
+
+                    <div className="form-check">
+                    <input
+                        type='radio'
+                        label='POST'
+                        id='post'
+                        name='deliveryMethod'
+                        
+                        value={deliveryMethod}
+                        checked onChange={(e) => setDeliveryMethod(e.target.value)} />
+                        <label className="form-check-label" htmlFor="paypal">
+                   Send Solution
+                  </label>
+                        </div>
+                    </div>
+              <hr className="my-4" />
+
               <button className="w-100 btn btn-primary btn-lg" type="submit">
-                Continue to checkout
+                <NavLink className="nav-link" to="/placeorder">
+                  Place your order
+                </NavLink>
               </button>
             </form>
           </div>

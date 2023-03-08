@@ -12,6 +12,12 @@ const Cart = () => {
     dispatch(delItem(item));
   };
 
+// const checkOutHandler = () => {
+//   history.push("/login?redirect=shipping")
+// }
+
+
+
   const cartItems = (cartItem) => {
     return (
       <div className="px-4 my-5 bg-light rounded-3" key={cartItem.id}>
