@@ -1,5 +1,8 @@
+
+
 .App {
   text-align: center;
+ 
 }
 
 .App-logo {
@@ -24,15 +27,104 @@
   color: white;
 }
 
+
 .App-link {
   color: #61dafb;
+}
+
+.modal-backdrop {
+  position: fixed;
+  /* top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0; */
+  z-index: -1; 
+  background-color: #000000;
+  opacity: 0;
+  display: none;
+  overflow: scroll;
+}
+
+.modal-backdrop.fade.in {
+  z-index: -1;
+}
+
+.modal {
+  /* bug fix - custom overlay */
+  background-color: rgba(10, 10, 10, 0.45);
 }
 
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+@media only screen and (min-width: 280px) and (max-width: 991px) {
+  #brand1 {
+    display: none;
+
+  }
+  
+  .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .id {
+    padding-top: 5px;
+    padding-bottom: 2px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+    width: auto;
+  }
+
+  .dropdown {
+    padding-bottom: 5px;
+    padding-top: -2px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+    width: auto;
+    backdrop-filter: #fff;
+  }
+  
+}
+
+@media only screen and (min-width: 991px) and (max-width: 2000px) {
+  .navbar-nav {
+    padding-left: 40px;
+  }
+  
+  #brand1 {
+    display: none;
+
+    text-align: center;
+    justify-items: center;
+    justify-content: center;
+    width: auto;
+    padding-left: 20px;
+  }
+
+  #brand {
+    /* display: none; */
+    display: flex;
+
+    text-align: center;
+    justify-items: center;
+    justify-content: center;
+    width: auto;
+    padding-left: 20px;
+  }
+
+ 
+  
 }
